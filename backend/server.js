@@ -11,6 +11,7 @@ connectDb()
 
 app.use(express.json())
 app.use(cors())
+app.use(express.static("public"))
 
 app.use("/", userRoutes)
 app.use("/recipe", recipeRoutes)

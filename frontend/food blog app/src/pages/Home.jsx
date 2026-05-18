@@ -1,15 +1,17 @@
 import React from 'react'
 import foodRecipe from '../assets/foodRecipe.png'
 import RecipeItems from '../components/RecipeItems'
+import { useNavigate } from 'react-router-dom'
 
 export default function Home() {
+    const navigate = useNavigate()
     return (
         <>
             <section className='home'>
                 <div className='left'>
                     <h1>Food Recipe</h1>
                     <p>Welcome to Food Recipe, your ultimate destination for culinary inspiration. Share your unique recipes, connect with a global community of food lovers, and discover new favorites. Start your journey of creating and sharing delicious meals with us today.</p>
-                    <button>Share your recipe</button>
+                    <button onClick={() => navigate("/addRecipe")}>Share your recipe</button>
                 </div>
                 <div className='right'>
                     <img src={foodRecipe} width="320" height="300" />
