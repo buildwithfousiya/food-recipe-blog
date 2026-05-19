@@ -21,17 +21,17 @@ const getRecipes = async (req, res) => {
 const getRecipe = async (req, res) => {
     const recipe = await Recipes.findById(req.params.id)
     return res.json(recipe)
-}
+} 
 
 const addRecipe = async (req, res) => {
-    console.log(req.file)
+    console.log(req.user)
     const { title, ingredients, instructions, time } = req.body
 
     if (!title || !ingredients || !instructions) {
         res.json({ message: "Please provide title,ingredients and instruction" })
     }
     const newRecipe = await Recipes.create({
-        title, ingredients, instructions, time, coverImage: req.file.filename
+        title, ingredients, instructions, time, coverImage: req.file?.filename
     })
     return res.json(newRecipe)
 }
