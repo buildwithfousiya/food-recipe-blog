@@ -7,15 +7,24 @@ import axios from 'axios'
 import AddFoodRecipe from './pages/addFoodRecipe'
 
 const getAllRecipes = async () => {
-  const res = await axios.get("http://localhost:5000/recipe");
-  return res.data;
+  let allRecipes = []
+  await axios.get("http://localhost:5000/recipe").then(res => {
+    allRecipes = res.data
+  })
+  return allRecipes
+}
+
+const getMyRecipe = async () => {
+  let user = JSON.parse(localStorage.getItem("user"))
+  let allRecipes = await getAllRecipes()
+  return allRecipes.filter(item => item.createdBy === user._id)
 }
 
 const router = createBrowserRouter([
   {
     path: "/", element: <MainNavigation />, children: [
       { path: "/", element: <Home />, loader: getAllRecipes },
-      { path: "/myRecipe", element: <Home /> },
+      { path: "/myRecipe", element: <Home />, loader: getMyRecipe },
       { path: "/favRecipe", element: <Home /> },
       { path: "/addRecipe", element: <AddFoodRecipe /> }
     ]

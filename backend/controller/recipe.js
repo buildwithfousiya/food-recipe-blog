@@ -31,7 +31,8 @@ const addRecipe = async (req, res) => {
         res.json({ message: "Please provide title,ingredients and instruction" })
     }
     const newRecipe = await Recipes.create({
-        title, ingredients, instructions, time, coverImage: req.file?.filename
+        title, ingredients, instructions, time, coverImage: req.file?.filename,
+        createdBy: req.user.id
     })
     return res.json(newRecipe)
 }
