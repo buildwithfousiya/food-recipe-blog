@@ -27,6 +27,7 @@ const router = createBrowserRouter([
       { path: "/myRecipe", element: <Home />, loader: getMyRecipe },
       { path: "/favRecipe", element: <Home /> },
       { path: "/addRecipe", element: <AddFoodRecipe /> }
+      { path: "/editRecipe/:id", element: <editRecipe /> }
     ]
   }
 ])
