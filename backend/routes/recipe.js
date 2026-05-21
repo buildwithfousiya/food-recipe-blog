@@ -6,7 +6,7 @@ const verifyToken = require("../middleware/auth")
 router.get("/", getRecipes) // get all recipes
 router.get("/:id", getRecipe) //get recipe by id
 router.post("/", upload.single("file"), verifyToken, addRecipe) //add recipe
-router.put("/:id", verifyToken, updateRecipe) //update recipe
+router.put("/:id", upload.single("file"),verifyToken, updateRecipe) //update recipe
 router.delete("/:id", verifyToken, deleteRecipe) //delete recipe
 
 module.exports = router

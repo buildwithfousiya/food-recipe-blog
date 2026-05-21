@@ -4,11 +4,18 @@ import { BsStopwatchFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import axios from "axios";
 
 export default function RecipeItems() {
-  const allRecipes = useLoaderData();
+  const recipes = useLoaderData();
+  const [allrecipes, setAllRecipes]= useState()
   let path = window.location.pathname === "/myRecipe" ? true : false;
   console.log(allRecipes);
+
+  const onDelet = async (id)=> {
+    await axios.delet(`https://localhost:5000/recipe/${id}`)
+    .then((res)=> console.log(res)) 
+  }
 
   return (
     <>
@@ -16,32 +23,23 @@ export default function RecipeItems() {
         {allRecipes?.map((item, index) => {
           return (
             <div key={index} className="card">
-              <img
-                src={`http://localhost:5000/images/${item.coverImage}`}
-                width="120px"
-                height="100px"
-              />
+              <img src={`http://localhost:5000/images/${item.coverImage}`}width="120px" height="100px"/>
               <div className="card-body">
                 <div className="title">{item.title}</div>
                 <div className="icons">
-                  <div className="timer">
-                    <BsStopwatchFill />
-                    30min
-                  </div>
-                  {!path ? (
-                    <FaHeart />
-                  ) : (
+                  <div className="timer"><BsStopwatchFill />{item.time}</div>
+                  {(!path) ? (<FaHeart />) : 
                     <div className="action">
-                      <link to={`/editRecipe/${item._id}`} className="editIcon"}><FaEdit /></link>
-                      <MdDelete classname="deleteIcon" />
+                      <link to={`/editRecipe/${item._id}`} className="editIcon"><FaEdit /></link>
+                      <MdDelete onClick={() => OnDelete(item._id)}className="deleteIcon" />
                     </div>
                   }
                 </div>
               </div>
             </div>
-          );
-        })}
+          )
+        })
+      }
       </div>
     </>
-  );
-}
+  )

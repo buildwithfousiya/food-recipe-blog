@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
 
@@ -20,8 +20,8 @@ export default function editRecipe() {
                 })
             })
         }
-    })
-
+        getData()
+    },[])
     const onHandleChange = (e) => {
         let val = e.target.name === "ingredients" ? e.target.value.split(",") : (e.target.name === "file") ? e.target.files[0] : e.target.value
         setRecipeData(pre => ({ ...pre, [e.target.name]: val }))
@@ -30,13 +30,13 @@ export default function editRecipe() {
     const onHandleSubmit = async (e) => {
         e.preventDefault()
         console.log(recipeData)
-        await axios.put(`http://localhost:5000/recipe${idf}`, recipeData, {
+        await axios.put(`http://localhost:5000/recipe/${id}`, recipeData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 'authorization': 'bearer ' + localStorage.getItem("token")
             }
         })
-            .then(() => navigate("/"))
+            .then(() => navigate("/myRecipe"))
     }
 
     return (
