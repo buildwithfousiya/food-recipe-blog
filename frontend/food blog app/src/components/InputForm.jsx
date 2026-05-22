@@ -15,6 +15,7 @@ export default function InputForm({ setIsOpen }) {
                 localStorage.setItem("token", res.data.token)
                 localStorage.setItem("user", JSON.stringify(res.data.user))
                 setIsOpen()
+                window.location.reload()
             })
             .catch(data => setError(data.response?.data?.error))
     }

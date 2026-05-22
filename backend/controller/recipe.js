@@ -51,9 +51,9 @@ const updateRecipe = async (req, res) => {
     }
 }
 
-const deleteRecipe = (req, res) => {
+const deleteRecipe = async(req, res) => {
     try{
-        await Recipes.deletOne({_id:req.params.id})
+        await Recipes.deleteOne({_id:req.params.id})
         res.json({status:"ok"})
     }
     catch(err){

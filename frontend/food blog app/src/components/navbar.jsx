@@ -16,9 +16,16 @@ export default function Navbar() {
 
     const checkLogin = () => {
         if (token) {
+            // Retrieve current user before removal to clear their favorites key
+            const currentUser = JSON.parse(localStorage.getItem("user"))
+            const favKey = currentUser ? `fav_${currentUser._id}` : "fav"
             localStorage.removeItem("token")
             localStorage.removeItem("user")
+            // Remove user-specific favorites from localStorage
+            localStorage.removeItem(favKey)
             setIsLogin(true)
+            navigate("/")
+            window.location.reload()
         } else {
             setIsOpen(true)
         }

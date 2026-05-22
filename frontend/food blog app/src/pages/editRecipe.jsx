@@ -2,7 +2,7 @@ import { useState,useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
 
-export default function editRecipe() {
+export default function EditRecipe() {
     const [recipeData, setRecipeData] = useState({})
     const navigate = useNavigate()
     const {id} = useParams()
