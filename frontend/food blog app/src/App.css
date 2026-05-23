@@ -36,22 +36,47 @@ header ul li{
 li a{
   color: black;
   transition: all 0.3s;
-  padding:2px 10px;
+  padding: 4px 12px;
   border-radius: 10px;
+  text-decoration: none;
 }
 
 li a:hover{
-  color:black;
+  color: black;
+  background-color: #d4f6e8;
 }
 
 li .login{
   font-size: 16px;
   font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 10px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+li .login:hover{
+  background-color: #d4f6e8;
 }
 
 header h2{
   margin-left: 1rem;
   color: black;
+}
+
+.nav-user {
+  background-color: #d4f6e8;
+  color: #1a6b47;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 }
 
 section{

@@ -34,7 +34,8 @@ export default function Navbar() {
                     <li><NavLink to="/">Home</NavLink></li>
                     <li onClick={() => isLogin && setIsOpen(true)}><NavLink to={!isLogin ? "/myRecipe" : "/"}>My Recipes</NavLink></li>
                     <li onClick={() => isLogin && setIsOpen(true)}><NavLink to={!isLogin ? "/favRecipe" : "/"}>Favourites</NavLink></li>
-                    <li onClick={checkLogin}><p className='login'>{(isLogin) ? 'Login' : 'Logout'}{user?.email ? `${user?.email}` : ""}</p></li>
+                    <li onClick={checkLogin}><p className='login'>{(isLogin) ? 'Login' : 'Logout'}</p></li>
+                    {!isLogin && user?.email && <li><span className='nav-user'>{user.email}</span></li>}
                 </ul>
             </header>
             {(isOpen) && <Modal onClose={() => setIsOpen(false)}><InputForm setIsOpen={() => setIsOpen(false)} /></Modal>}
