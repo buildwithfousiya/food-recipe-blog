@@ -18,6 +18,7 @@ export default function RecipeItems() {
   let favItems = JSON.parse(localStorage.getItem(favKey)) ?? []
   const [isFavRecipe, setIsFavRecipe] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null)
 
 
   useEffect(() => {
@@ -25,7 +26,11 @@ export default function RecipeItems() {
   }, [recipes])
 
   const onDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/recipe/${id}`)
+    await axios.delete(`http://localhost:5000/recipe/${id}`, {
+      headers: {
+        authorization: 'bearer ' + localStorage.getItem("token")
+      }
+    })
       .then((res) => console.log(res))
     setAllRecipes(recipes => recipes.filter(recipe => recipe._id !== id))
     let filterItem = favItems.filter(recipe => recipe._id !== id)
@@ -57,8 +62,8 @@ export default function RecipeItems() {
                     <div className='timer'><BsStopwatchFill />{item.time}</div>
                     {(!path) ? <FaHeart onClick={(e) => { e.stopPropagation(); favRecipe(item); }} style={{ color: (favItems.some(res => res._id === item._id)) ? "red" : "" }} /> :
                       <div className='action'>
-                        <Link to={`/editRecipe/${item._id}`} className="editIcon"><FaEdit /></Link>
-                        <MdDelete onClick={() => onDelete(item._id)} className='deleteIcon' />
+                        <Link to={`/editRecipe/${item._id}`} className="editIcon" onClick={(e) => e.stopPropagation()}><FaEdit /></Link>
+                        <MdDelete onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(item._id); }} className='deleteIcon' />
                       </div>
                     }
                   </div>
@@ -69,6 +74,18 @@ export default function RecipeItems() {
         }
       </div>
       {isLoginOpen && <Modal onClose={() => setIsLoginOpen(false)}><InputForm setIsOpen={() => setIsLoginOpen(false)} /></Modal>}
+      {deleteConfirmId && (
+        <Modal onClose={() => setDeleteConfirmId(null)}>
+          <div className="confirm-modal-content">
+            <h3>Delete Recipe</h3>
+            <p>Are you sure you want to delete this recipe? This action cannot be undone.</p>
+            <div className="confirm-modal-buttons">
+              <button className="confirm-btn-cancel" onClick={() => setDeleteConfirmId(null)}>Cancel</button>
+              <button className="confirm-btn-delete" onClick={() => { onDelete(deleteConfirmId); setDeleteConfirmId(null); }}>Delete</button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </>
   )
 }

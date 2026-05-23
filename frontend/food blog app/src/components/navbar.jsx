@@ -19,8 +19,7 @@ export default function Navbar() {
             localStorage.removeItem("token")
             localStorage.removeItem("user")
             setIsLogin(true)
-            navigate("/")
-            window.location.reload()
+            window.location.href = "/"
         } else {
             setIsOpen(true)
         }

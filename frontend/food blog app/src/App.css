@@ -303,6 +303,66 @@ section{
   z-index: 5;
 }
 
+/* ===== Confirmation Modal ===== */
+.confirm-modal-content {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.confirm-modal-content h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #213547;
+  margin-bottom: 0.75rem;
+}
+
+.confirm-modal-content p {
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+}
+
+.confirm-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.confirm-btn-cancel {
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  color: #495057;
+  padding: 0.55rem 1.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn-cancel:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.confirm-btn-delete {
+  border: none;
+  background-color: #ef3535;
+  color: #ffffff;
+  padding: 0.55rem 1.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn-delete:hover {
+  background-color: #dc2626;
+  box-shadow: 0 2px 6px rgba(239, 53, 53, 0.2);
+}
+
 .active{
   color:black !important;
   background-color: #d4f6e8;
