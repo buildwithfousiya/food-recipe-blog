@@ -5,15 +5,19 @@ import { FaEdit } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+import Modal from './Modal';
+import InputForm from './InputForm';
 
 export default function RecipeItems() {
   const recipes = useLoaderData()
+  const navigate = useNavigate()
   const [allRecipes, setAllRecipes] = useState()
   let path = window.location.pathname === "/myRecipe" ? true : false
   const user = JSON.parse(localStorage.getItem("user"))
   const favKey = user ? `fav_${user._id}` : "fav"
   let favItems = JSON.parse(localStorage.getItem(favKey)) ?? []
   const [isFavRecipe, setIsFavRecipe] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
 
 
   useEffect(() => {
@@ -28,6 +32,11 @@ export default function RecipeItems() {
     localStorage.setItem(favKey, JSON.stringify(filterItem))
   }
   const favRecipe = (item) => {
+    let token = localStorage.getItem("token")
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
     let filterItem = favItems.filter(recipe => recipe._id !== item._id)
     favItems = favItems.filter(recipe => recipe._id === item._id).length === 0 ? [...favItems, item] : filterItem
     localStorage.setItem(favKey, JSON.stringify(favItems))
@@ -59,6 +68,7 @@ export default function RecipeItems() {
           })
         }
       </div>
+      {isLoginOpen && <Modal onClose={() => setIsLoginOpen(false)}><InputForm setIsOpen={() => setIsLoginOpen(false)} /></Modal>}
     </>
   )
 }
