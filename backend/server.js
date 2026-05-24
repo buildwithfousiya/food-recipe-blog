@@ -1,6 +1,6 @@
 const express = require("express")
 const app = express()
-const dotenv = require("dotenv").config()
+require("dotenv").config()
 const recipeRoutes = require("./routes/recipe")
 const userRoutes = require("./routes/user")
 const connectDb = require("./config/connectionDb")

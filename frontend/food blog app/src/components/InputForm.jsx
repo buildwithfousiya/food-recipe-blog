@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import axios from 'axios'
+import { useState } from 'react'
 
 export default function InputForm({ setIsOpen }) {
     const [email, setEmail] = useState('')

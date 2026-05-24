@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import { BsArrowLeft } from "react-icons/bs"
 
 export default function AddFoodRecipe() {
     const [recipeData, setRecipeData] = useState({})
@@ -24,8 +25,12 @@ export default function AddFoodRecipe() {
 
     return (
         <>
-            <div className='container' >
-                <form className='form' onSubmit={onHandleSubmit}>
+            <div className='container edit-recipe-container' >
+                <button className='detail-back-btn' onClick={() => navigate(-1)}>
+                    <BsArrowLeft /> Back
+                </button>
+                <form className='form edit-recipe-form' onSubmit={onHandleSubmit}>
+                    <h2 className='edit-recipe-title'>Share Recipe</h2>
                     <div className='form-control'>
                         <label>Title</label>
                         <input type="text" className='input' name="title" onChange={onHandleChange}></input>
