@@ -19,9 +19,9 @@ export default function MainNavigation() {
 
   return (
     <>
-    <Navbar />
-    <Outlet />
-    <Footer />
+      <Navbar />
+      <Outlet />
+      <Footer />
     </>
   )
 }

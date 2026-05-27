@@ -11,7 +11,7 @@ export default function RecipeDetails() {
    <>
     <div className='detail-page'>
       <div className='detail-hero'>
-        <img src={`http://localhost:5000/images/${recipe.coverImage}`} alt={recipe.title} />
+        <img src={`${import.meta.env.VITE_API_URL}/images/${recipe.coverImage}`} alt={recipe.title} />
         <div className='detail-hero-overlay'></div>
         <button className='detail-back-btn' onClick={() => navigate(-1)}>
           <BsArrowLeft /> Back

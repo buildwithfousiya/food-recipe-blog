@@ -9,7 +9,7 @@ import RecipeDetails from './pages/recipeDetails'
 
 const getAllRecipes = async () => {
   let allRecipes = []
-  await axios.get("http://localhost:5000/recipe").then(res => {
+  await axios.get(`${import.meta.env.VITE_API_URL}/recipe`).then(res => {
     allRecipes = res.data
   })
   return allRecipes
@@ -29,10 +29,10 @@ const getFavRecipes = () => {
 
 const getRecipe = async ({ params }) => {
   let recipe;
-  await axios.get(`http://localhost:5000/recipe/${params.id}`)
+  await axios.get(`${import.meta.env.VITE_API_URL}/recipe/${params.id}`)
     .then(res => recipe = res.data)
 
-  await axios.get(`http://localhost:5000/user/${recipe.createdBy}`)
+  await axios.get(`${import.meta.env.VITE_API_URL}/user/${recipe.createdBy}`)
     .then(res => {
       recipe = { ...recipe, email: res.data.email }
     })
