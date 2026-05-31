@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from './Modal'
 import InputForm from './InputForm'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 export default function Navbar() {
-    const navigate = useNavigate()
     const [isOpen, setIsOpen] = useState(false)
     let token = localStorage.getItem("token")
     const [showLogin, setShowLogin] = useState(token ? false : true)
@@ -37,7 +36,7 @@ export default function Navbar() {
                     {!showLogin && user?.email && <li><span className='nav-user'>{user.email}</span></li>}
                 </ul>
             </header>
-            {(isOpen) && <Modal onClose={() => setIsOpen(false)}><InputForm setIsOpen={() => setIsOpen(false)} /></Modal>}
+            {isOpen && <Modal onClose={() => setIsOpen(false)}><InputForm setIsOpen={() => setIsOpen(false)} /></Modal>}
         </>
     )
 }

@@ -36,6 +36,7 @@ export default function RecipeItems() {
     let filterItem = favItems.filter(recipe => recipe._id !== id)
     localStorage.setItem(favKey, JSON.stringify(filterItem))
   }
+  
   const favRecipe = (item) => {
     let token = localStorage.getItem("token")
     if (!token) {
@@ -46,6 +47,9 @@ export default function RecipeItems() {
     favItems = favItems.filter(recipe => recipe._id === item._id).length === 0 ? [...favItems, item] : filterItem
     localStorage.setItem(favKey, JSON.stringify(favItems))
     setIsFavRecipe(pre => !pre)
+    if (window.location.pathname === "/favRecipe") {
+      setAllRecipes(recipes => recipes.filter(recipe => recipe._id !== item._id))
+    }
   }
 
   return (
@@ -73,7 +77,7 @@ export default function RecipeItems() {
           })
         }
       </div>
-      {isLoginOpen && <Modal onClose={() => setIsLoginOpen(false)}><InputForm setIsOpen={() => setIsLoginOpen(false)} /></Modal>}
+
       {deleteConfirmId && (
         <Modal onClose={() => setDeleteConfirmId(null)}>
           <div className="confirm-modal-content">
@@ -86,6 +90,8 @@ export default function RecipeItems() {
           </div>
         </Modal>
       )}
+
+      {isLoginOpen && <Modal onClose={() => setIsLoginOpen(false)}><InputForm setIsOpen={() => setIsLoginOpen(false)} /></Modal>}
     </>
   )
 }
