@@ -1,10 +1,10 @@
-import React from 'react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import foodRecipe from '../assets/foodRecipe.png'
 import RecipeItems from '../components/RecipeItems'
-import { useNavigate } from 'react-router-dom'
 import Modal from '../components/Modal'
 import InputForm from '../components/InputForm'
-import { useState } from 'react'
 
 export default function Home() {
     const navigate = useNavigate()
@@ -12,9 +12,9 @@ export default function Home() {
 
     const addRecipe = () => {
         let token = localStorage.getItem("token")
-        if (token)
+        if (token) {
             navigate("/addRecipe")
-        else {
+        } else {
             setIsOpen(true)
         }
     }

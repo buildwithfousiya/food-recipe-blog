@@ -1,4 +1,3 @@
-import React from 'react'
 import { FaUserCircle } from 'react-icons/fa'
 import { BsStopwatchFill, BsArrowLeft } from 'react-icons/bs'
 import { useLoaderData, useNavigate } from 'react-router-dom'
@@ -57,4 +56,4 @@ export default function RecipeDetails() {
     </div>
    </>
   )
-}
+}

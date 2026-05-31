@@ -5,6 +5,7 @@ import { BsArrowLeft } from "react-icons/bs"
 
 export default function AddFoodRecipe() {
     const [recipeData, setRecipeData] = useState({})
+    const [error, setError] = useState("")
     const navigate = useNavigate()
     const onHandleChange = (e) => {
         let val = e.target.name === "ingredients"
@@ -15,8 +16,27 @@ export default function AddFoodRecipe() {
         setRecipeData(pre => ({ ...pre, [e.target.name]: val }))
     }
 
+    const validateForm = (data) => {
+        if (!data.title || !data.title.trim()) return "Title is required."
+        if (!data.time || !data.time.trim()) return "Time is required."
+        if (!data.ingredients || data.ingredients.length === 0 || (Array.isArray(data.ingredients) && data.ingredients.every(i => !i.trim()))) {
+            return "Ingredients are required."
+        }
+        if (!data.instructions || !data.instructions.trim()) return "Instructions are required."
+        if (!data.file) return "Recipe Image is required."
+        return ""
+    }
+
     const onHandleSubmit = async (e) => {
         e.preventDefault()
+        const validationError = validateForm(recipeData)
+        if (validationError) {
+            setError(validationError)
+            return
+        }
+
+        setError("")
+
         await axios.post(`${import.meta.env.VITE_API_URL}/recipe`, recipeData, {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -54,6 +74,7 @@ export default function AddFoodRecipe() {
                         <label>Recipe Image</label>
                         <input type="file" className='input' name="file" onChange={onHandleChange}></input>
                     </div>
+                    {error && <h6 className='error' style={{ marginTop: '15px', textAlign: 'center' }}>{error}</h6>}
                     <button type="submit">Add Recipe</button>
                 </form>
             </div>
