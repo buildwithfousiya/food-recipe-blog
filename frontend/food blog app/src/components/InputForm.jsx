@@ -5,10 +5,33 @@ export default function InputForm({ setIsOpen }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSignUp, setIsSignUp] = useState(false)
-    const [error, setError] = useState(false)
+    const [error, setError] = useState('')
+
+    const validateForm = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!email || !email.trim()) {
+            return "Email is required."
+        }
+        if (!emailRegex.test(email)) {
+            return "Please enter a valid email address."
+        }
+        if (!password || !password.trim()) {
+            return "Password is required."
+        }
+        if (isSignUp && password.length < 6) {
+            return "Password must be at least 6 characters long."
+        }
+        return ""
+    }
 
     const handleOnsubmit = async (e) => {
         e.preventDefault()
+        const validationError = validateForm()
+        if (validationError) {
+            setError(validationError)
+            return
+        }
+        setError("")
         let endpoint = (isSignUp) ? "signUp" : "login"
         await axios.post(`${import.meta.env.VITE_API_URL}/${endpoint}`, { email, password })
             .then((res) => {
@@ -17,18 +40,18 @@ export default function InputForm({ setIsOpen }) {
                 setIsOpen()
                 window.location.reload()
             })
-            .catch(data => setError(data.response?.data?.error))
+            .catch(data => setError(data.response?.data?.error || "An error occurred."))
     }
     return (
         <>
             <form className='form' onSubmit={handleOnsubmit}>
                 <div className='form-control'>
                     <label>Email</label>
-                    <input type="email" className='input' onChange={(e) => setEmail(e.target.value)} required></input>
+                    <input type="text" className='input' onChange={(e) => setEmail(e.target.value)} ></input>
                 </div>
                 <div className='form-control'>
                     <label>Password</label>
-                    <input type="password" className='input' onChange={(e) => setPassword(e.target.value)} required></input>
+                    <input type="password" className='input' onChange={(e) => setPassword(e.target.value)} ></input>
                 </div>
                 <button type="submit">{isSignUp ? "Sign Up" : "Login"}</button>
                 <br></br>
