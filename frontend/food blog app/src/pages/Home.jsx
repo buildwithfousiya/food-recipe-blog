@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { BsSearch } from 'react-icons/bs'
 
 import foodRecipe from '../assets/foodRecipe.png'
 import RecipeItems from '../components/RecipeItems'
@@ -9,6 +10,18 @@ import InputForm from '../components/InputForm'
 export default function Home() {
     const navigate = useNavigate()
     const [isOpen, setIsOpen] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery)
+        }, 300)
+
+        return () => {
+            clearTimeout(handler)
+        }
+    }, [searchQuery])
 
     const addRecipe = () => {
         let token = localStorage.getItem("token")
@@ -36,7 +49,19 @@ export default function Home() {
             </div>
             {(isOpen) && <Modal onClose={() => setIsOpen(false)}><InputForm setIsOpen={() => setIsOpen(false)} /></Modal>}
             <div className='recipe'>
-                <RecipeItems />
+                <div className="search-container">
+                    <div className="search-wrapper">
+                        <BsSearch className="search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Search recipes by title or ingredients..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
+                </div>
+                <RecipeItems searchQuery={debouncedSearchQuery} onClearSearch={() => { setSearchQuery(''); setDebouncedSearchQuery(''); }} />
             </div>
         </>
     )

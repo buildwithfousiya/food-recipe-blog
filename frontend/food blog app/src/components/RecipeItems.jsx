@@ -8,7 +8,7 @@ import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 import InputForm from './InputForm';
 
-export default function RecipeItems() {
+export default function RecipeItems({ searchQuery = "", onClearSearch }) {
   const recipes = useLoaderData()
   const navigate = useNavigate()
   const [allRecipes, setAllRecipes] = useState()
@@ -52,11 +52,35 @@ export default function RecipeItems() {
     }
   }
 
+  const filteredRecipes = allRecipes?.filter(recipe => {
+    const titleMatch = recipe.title?.toLowerCase().includes(searchQuery.toLowerCase());
+    const ingredientsMatch = Array.isArray(recipe.ingredients)
+      ? recipe.ingredients.some(ing => ing.toLowerCase().includes(searchQuery.toLowerCase()))
+      : typeof recipe.ingredients === 'string'
+        ? recipe.ingredients.toLowerCase().includes(searchQuery.toLowerCase())
+        : false;
+    return titleMatch || ingredientsMatch;
+  });
+
+  if (filteredRecipes && filteredRecipes.length === 0) {
+    return (
+      <div className="no-recipes">
+        <h3>No Recipes Found</h3>
+        <p>We couldn't find any recipes matching "{searchQuery}". Try searching for something else!</p>
+        {onClearSearch && (
+          <button className="clear-search-btn" onClick={onClearSearch}>
+            Clear Search
+          </button>
+        )}
+      </div>
+    )
+  }
+
   return (
     <>
       <div className='card-container'>
         {
-          allRecipes?.map((item, index) => {
+          filteredRecipes?.map((item, index) => {
             return (
               <div key={index} className='card' onClick={() => navigate(`/recipe/${item._id}`)}>
                 <img src={`${import.meta.env.VITE_API_URL}/images/${item.coverImage}`} width="120px" height="100px"></img>
