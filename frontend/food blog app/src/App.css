@@ -9,6 +9,8 @@
 
 header {
   width: 100%;
+  height: 60px;
+  padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,12 +21,22 @@ header {
   background-color: #ffffff;
 }
 
+header h2 {
+  margin: 0;
+}
+
 header ul{
-  width: 40%;
-  height: 50px;
+  height: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-end;
   align-items: center;
+  gap: 2rem;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-toggle {
+  display: none;
 }
 
 header ul li{
@@ -114,11 +126,25 @@ section{
   margin:2rem 0;
 }
 
-.bg svg{
+.home .left,
+.home .right {
+  position: relative;
+  z-index: 1;
+}
+
+.bg {
   position: absolute;
   bottom: 0;
-  left:0;
+  left: 0;
   width: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .card-container{
@@ -199,13 +225,15 @@ section{
 
 .modal{
   position: fixed;
-  top: 34%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10;
   padding: 2rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border:none;
-  left:30%;
-  width: 40%;
+  width: 90%;
+  max-width: 450px;
 }
 
 .backdrop{
@@ -381,7 +409,7 @@ section{
   width: 100%;
   height: 340px;
   overflow: hidden;
-  margin-top: 50px;
+  margin-top: 60px;
 }
 
 .detail-hero img {
@@ -927,6 +955,104 @@ section{
 
 .not-found-btn svg {
   font-size: 18px;
+}
+
+/* ===== General Responsive Styles ===== */
+
+@media (max-width: 992px) {
+  .home {
+    gap: 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #213547;
+    margin-right: 0.5rem;
+  }
+  header {
+    padding: 0 1.5rem;
+  }
+  header ul {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 1.5rem 0;
+    z-index: 9;
+    border-top: 1px solid #f0f7f3;
+  }
+  header ul.nav-active {
+    display: flex;
+  }
+  header ul li {
+    width: 100%;
+    text-align: center;
+  }
+  li a {
+    display: inline-block;
+    padding: 8px 20px;
+  }
+  .nav-user {
+    max-width: 80%;
+  }
+  .home {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    text-align: center;
+    height: auto;
+    margin-top: 6rem;
+    margin-bottom: 2rem;
+  }
+  .home .left {
+    margin-bottom: 1rem;
+  }
+  .home .left h1 {
+    font-size: 2.5rem;
+  }
+  .home button {
+    margin: 0 auto;
+  }
+  section {
+    height: auto;
+  }
+  .not-found-title {
+    font-size: 6rem;
+  }
+  .not-found-card {
+    padding: 3rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .not-found-container {
+    padding: 8rem 1rem 3rem;
+  }
+  .not-found-card {
+    padding: 2rem 1.5rem;
+  }
+  .not-found-title {
+    font-size: 4.5rem;
+  }
+  .not-found-subtitle {
+    font-size: 1.25rem;
+  }
+  .not-found-text {
+    font-size: 0.9rem;
+    margin-bottom: 1.8rem;
+  }
 }
 
 
