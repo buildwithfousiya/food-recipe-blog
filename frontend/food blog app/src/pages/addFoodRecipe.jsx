@@ -6,6 +6,7 @@ import { BsArrowLeft } from "react-icons/bs"
 export default function AddFoodRecipe() {
     const [recipeData, setRecipeData] = useState({})
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const onHandleChange = (e) => {
         let val = e.target.name === "ingredients"
@@ -36,14 +37,20 @@ export default function AddFoodRecipe() {
         }
 
         setError("")
+        setLoading(true)
 
-        await axios.post(`${import.meta.env.VITE_API_URL}/recipe`, recipeData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'authorization': 'bearer ' + localStorage.getItem("token")
-            }
-        })
-            .then(() => navigate("/"))
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/recipe`, recipeData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    'authorization': 'bearer ' + localStorage.getItem("token")
+                }
+            })
+            navigate("/")
+        } catch (err) {
+            setError(err.response?.data?.message || err.message || "An error occurred while adding the recipe.")
+            setLoading(false)
+        }
     }
 
     return (
@@ -75,7 +82,10 @@ export default function AddFoodRecipe() {
                         <input type="file" className='input' name="file" onChange={onHandleChange}></input>
                     </div>
                     {error && <h6 className='error' style={{ marginTop: '15px', textAlign: 'center' }}>{error}</h6>}
-                    <button type="submit">Add Recipe</button>
+                    <button type="submit" disabled={loading}>
+                        {loading && <span className="btn-spinner"></span>}
+                        {loading ? "Adding..." : "Add Recipe"}
+                    </button>
                 </form>
             </div>
         </>

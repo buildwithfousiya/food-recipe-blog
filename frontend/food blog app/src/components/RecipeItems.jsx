@@ -83,7 +83,7 @@ export default function RecipeItems({ searchQuery = "", onClearSearch }) {
           filteredRecipes?.map((item, index) => {
             return (
               <div key={index} className='card' onClick={() => navigate(`/recipe/${item._id}`)}>
-                <img src={`${import.meta.env.VITE_API_URL}/images/${item.coverImage}`} width="120px" height="100px"></img>
+                <img src={item.coverImage?.startsWith("http") ? item.coverImage : `${import.meta.env.VITE_API_URL}/images/${item.coverImage}`} width="120px" height="100px"></img>
                 <div className='card-body'>
                   <div className='title'>{item.title}</div>
                   <div className='icons'>
