@@ -6,6 +6,7 @@ import AddFoodRecipe from './pages/addFoodRecipe'
 import EditRecipe from './pages/editRecipe'
 import Home from './pages/Home'
 import RecipeDetails from './pages/recipeDetails'
+import NotFound from './pages/NotFound'
 
 const getAllRecipes = async () => {
   let allRecipes = []
@@ -48,7 +49,8 @@ const router = createBrowserRouter([
       { path: "/favRecipe", element: <Home />, loader: getFavRecipes },
       { path: "/addRecipe", element: <AddFoodRecipe /> },
       { path: "/editRecipe/:id", element: <EditRecipe /> },
-      { path: "/recipe/:id", element: <RecipeDetails />, loader: getRecipe }
+      { path: "/recipe/:id", element: <RecipeDetails />, loader: getRecipe },
+      { path: "*", element: <NotFound /> }
     ]
   }
 
