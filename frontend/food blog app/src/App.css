@@ -247,7 +247,7 @@ section{
 }
 
 .form{
-  width: 71%;
+  width: 85%;
   margin: 0 auto;
   text-align: center;
 }
@@ -260,17 +260,33 @@ section{
 
 .form-control{
   display: flex;
-  justify-content: space-between;
-  gap:1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
   margin-top: 1rem;
 }
 
+.form-control label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a6b47;
+}
+
 .form-control .input{
-  flex-basis: 70%;
-  border:1px solid rgb(156 163 175);
-  border-radius: 4px;
-  height: 30px;
-  padding: 2px;
+  width: 100%;
+  border: 1.5px solid #d0ebd8;
+  border-radius: 6px;
+  height: 36px;
+  padding: 0 0.75rem;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-control .input:focus {
+  border-color: #00a884;
+  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.12);
 }
 
 .form-control .input-textarea{
@@ -281,11 +297,20 @@ section{
 }
 
 .form button{
-  margin:2rem 0;
-  border:none;
+  margin: 1.5rem 0 0.5rem;
+  padding: 0.5rem 2rem;
+  border: none;
   background-color: #d4f6e8;
   font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.form button:hover {
+  background-color: #b8eeda;
 }
 
 .form p{
