@@ -66,11 +66,15 @@ export default function RecipeItems({ searchQuery = "", onClearSearch }) {
     return (
       <div className="no-recipes">
         <h3>No Recipes Found</h3>
-        <p>We couldn't find any recipes matching "{searchQuery}". Try searching for something else!</p>
-        {onClearSearch && (
-          <button className="clear-search-btn" onClick={onClearSearch}>
-            Clear Search
-          </button>
+        {searchQuery && (
+          <>
+            <p>We couldn't find any recipes matching "{searchQuery}". Try searching for something else!</p>
+            {onClearSearch && (
+              <button className="clear-search-btn" onClick={onClearSearch}>
+                Clear Search
+              </button>
+            )}
+          </>
         )}
       </div>
     )

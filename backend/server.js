@@ -15,10 +15,14 @@ app.use(express.static("public"))
 app.use("/", userRoutes)
 app.use("/recipe", recipeRoutes)
 
-connectDb().then(() => {
+connectDb().catch(err => {
+    console.log("database connection failed:", err.message)
+})
+
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`)
     })
-}).catch(err => {
-    console.log("database connection failed:", err.message)
-})
+}
+
+module.exports = app
