@@ -9,11 +9,13 @@ const cors = require("cors")
 const PORT = process.env.PORT || 5000
 
 app.use(express.json())
+const allowedOrigins = [
+  process.env.CLIENT_URL_LOCAL,
+  process.env.CLIENT_URL_PROD,
+].filter(Boolean) // remove undefined values
+
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL_LOCAL,
-    process.env.CLIENT_URL_PROD
-  ],
+  origin: allowedOrigins.length > 0 ? allowedOrigins : "*",
   credentials: true
 }))
 app.use(express.static("public"))
