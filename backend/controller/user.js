@@ -27,6 +27,9 @@ const userLogin = async (req, res) => {
     }
     let user = await User.findOne({ email })
     if (user && await bcrypt.compare(password, user.password)) {
+        if (user.blocked) {
+            return res.status(403).json({ error: "Your account is blocked by the admin." })
+        }
         let token = jwt.sign({ email, id: user._id }, process.env.SECRET_KEY)
         return res.status(200).json({ token, user })
     }
@@ -40,8 +43,13 @@ const getUser = async (req, res) => {
     res.json({ email: user.email })
 }
 
+const checkUserStatus = async (req, res) => {
+    res.status(200).json({ message: "Active", user: req.user })
+}
+
 module.exports = {
     userSignUp,
     userLogin,
-    getUser
+    getUser,
+    checkUserStatus
 }

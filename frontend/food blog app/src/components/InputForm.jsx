@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
+import { API_URL } from '../config'
 
 export default function InputForm({ setIsOpen }) {
     const [email, setEmail] = useState('')
@@ -33,7 +34,7 @@ export default function InputForm({ setIsOpen }) {
         }
         setError("")
         let endpoint = (isSignUp) ? "signUp" : "login"
-        await axios.post(`${import.meta.env.VITE_API_URL}/${endpoint}`, { email, password })
+        await axios.post(`${API_URL}/${endpoint}`, { email, password })
             .then((res) => {
                 localStorage.setItem("token", res.data.token)
                 localStorage.setItem("user", JSON.stringify(res.data.user))

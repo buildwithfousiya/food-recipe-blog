@@ -3,6 +3,7 @@ const app = express()
 require("dotenv").config()
 const recipeRoutes = require("./routes/recipe")
 const userRoutes = require("./routes/user")
+const adminRoutes = require("./routes/admin")
 const connectDb = require("./config/connectionDb")
 const cors = require("cors")
 
@@ -22,6 +23,7 @@ app.use(express.static("public"))
 
 app.use("/", userRoutes)
 app.use("/recipe", recipeRoutes)
+app.use("/admin", adminRoutes)
 
 connectDb().catch(err => {
     console.log("database connection failed:", err.message)

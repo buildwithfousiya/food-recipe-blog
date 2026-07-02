@@ -1,6 +1,7 @@
 import { FaUserCircle } from 'react-icons/fa'
 import { BsStopwatchFill, BsArrowLeft } from 'react-icons/bs'
 import { useLoaderData, useNavigate } from 'react-router-dom'
+import { API_URL } from '../config'
 
 export default function RecipeDetails() {
     const recipe = useLoaderData()
@@ -10,7 +11,7 @@ export default function RecipeDetails() {
    <>
     <div className='detail-page'>
       <div className='detail-hero'>
-        <img src={recipe.coverImage?.startsWith("http") ? recipe.coverImage : `${import.meta.env.VITE_API_URL}/images/${recipe.coverImage}`} alt={recipe.title} />
+        <img src={recipe.coverImage?.startsWith("http") ? recipe.coverImage : `${API_URL}/images/${recipe.coverImage}`} alt={recipe.title} />
         <div className='detail-hero-overlay'></div>
         <button className='detail-back-btn' onClick={() => navigate(-1)}>
           <BsArrowLeft /> Back

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { BsArrowLeft } from "react-icons/bs"
+import { API_URL } from '../config'
 
 export default function AddFoodRecipe() {
     const [recipeData, setRecipeData] = useState({})
@@ -40,7 +41,7 @@ export default function AddFoodRecipe() {
         setLoading(true)
 
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/recipe`, recipeData, {
+            await axios.post(`${API_URL}/recipe`, recipeData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     'authorization': 'bearer ' + localStorage.getItem("token")

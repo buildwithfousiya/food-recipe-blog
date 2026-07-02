@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 import InputForm from './InputForm';
+import { API_URL } from '../config';
 
 export default function RecipeItems({ searchQuery = "", onClearSearch }) {
   const recipes = useLoaderData()
@@ -26,7 +27,7 @@ export default function RecipeItems({ searchQuery = "", onClearSearch }) {
   }, [recipes])
 
   const onDelete = async (id) => {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/recipe/${id}`, {
+    await axios.delete(`${API_URL}/recipe/${id}`, {
       headers: {
         authorization: 'bearer ' + localStorage.getItem("token")
       }
@@ -87,7 +88,7 @@ export default function RecipeItems({ searchQuery = "", onClearSearch }) {
           filteredRecipes?.map((item, index) => {
             return (
               <div key={index} className='card' onClick={() => navigate(`/recipe/${item._id}`)}>
-                <img src={item.coverImage?.startsWith("http") ? item.coverImage : `${import.meta.env.VITE_API_URL}/images/${item.coverImage}`} width="120px" height="100px"></img>
+                <img src={item.coverImage?.startsWith("http") ? item.coverImage : `${API_URL}/images/${item.coverImage}`} width="120px" height="100px"></img>
                 <div className='card-body'>
                   <div className='title'>{item.title}</div>
                   <div className='icons'>

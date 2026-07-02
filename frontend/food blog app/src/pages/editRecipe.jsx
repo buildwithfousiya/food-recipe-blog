@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
 import { BsArrowLeft } from "react-icons/bs"
+import { API_URL } from '../config'
 
 export default function EditRecipe() {
     const [recipeData, setRecipeData] = useState({})
@@ -12,7 +13,7 @@ export default function EditRecipe() {
 
     useEffect(() => {
         const getData = async () => {
-            await axios.get(`${import.meta.env.VITE_API_URL}/recipe/${id}`)
+            await axios.get(`${API_URL}/recipe/${id}`)
                 .then(response => {
                     let res = response.data
                     setRecipeData({
@@ -64,7 +65,7 @@ export default function EditRecipe() {
         setLoading(true)
 
         try {
-            await axios.put(`${import.meta.env.VITE_API_URL}/recipe/${id}`, recipeData, {
+            await axios.put(`${API_URL}/recipe/${id}`, recipeData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     'authorization': 'bearer ' + localStorage.getItem("token")

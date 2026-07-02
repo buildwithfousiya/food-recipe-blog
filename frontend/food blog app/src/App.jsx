@@ -7,40 +7,26 @@ import EditRecipe from './pages/editRecipe'
 import Home from './pages/Home'
 import RecipeDetails from './pages/recipeDetails'
 import NotFound from './pages/NotFound'
+import AdminLogin from './pages/AdminLogin'
+import AdminDashboard from './pages/AdminDashboard'
+import { getAllRecipes, getMyRecipe, getFavRecipes, getRecipe } from './utils/loaders'
 
-const getAllRecipes = async () => {
-  let allRecipes = []
-  await axios.get(`${import.meta.env.VITE_API_URL}/recipe`).then(res => {
-    allRecipes = res.data
-  })
-  return allRecipes
-}
-
-const getMyRecipe = async () => {
-  let user = JSON.parse(localStorage.getItem("user"))
-  let allRecipes = await getAllRecipes()
-  return user ? allRecipes.filter(item => item.createdBy === user._id) : []
-}
-
-const getFavRecipes = () => {
-  let user = JSON.parse(localStorage.getItem("user"))
-  let favKey = user ? `fav_${user._id}` : "fav"
-  return JSON.parse(localStorage.getItem(favKey)) ?? []
-}
-
-const getRecipe = async ({ params }) => {
-  let recipe;
-  await axios.get(`${import.meta.env.VITE_API_URL}/recipe/${params.id}`)
-    .then(res => recipe = res.data)
-
-  await axios.get(`${import.meta.env.VITE_API_URL}/user/${recipe.createdBy}`)
-    .then(res => {
-      recipe = { ...recipe, email: res.data.email }
-    })
-
-  return recipe
-}
-
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.response &&
+      ((error.response.status === 403 && error.response.data?.message === "Your account is blocked by the admin.") ||
+       (error.response.status === 401 && error.response.data?.message === "User account not found") ||
+       (error.response.status === 400 && error.response.data?.message === "Invalid token"))
+    ) {
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      window.location.href = "/"
+    }
+    return Promise.reject(error)
+  }
+)
 const router = createBrowserRouter([
   {
     path: "/", element: <MainNavigation />, children: [
@@ -52,6 +38,12 @@ const router = createBrowserRouter([
       { path: "/recipe/:id", element: <RecipeDetails />, loader: getRecipe },
       { path: "*", element: <NotFound /> }
     ]
+  },
+  {
+    path: "/admin", element: <AdminLogin />
+  },
+  {
+    path: "/admin/dashboard", element: <AdminDashboard />
   }
 
 ])
