@@ -388,6 +388,9 @@
 .btn-block:hover   { background-color: #e53e3e; color: white; }
 .btn-unblock { background-color: #f0fff4; color: #38a169; border-color: #9ae6b4; }
 .btn-unblock:hover { background-color: #38a169; color: white; }
+.btn-delete-user { background-color: #fff5f5; color: #c53030; border-color: #fc8181; }
+.btn-delete-user:hover { background-color: #c53030; color: white; }
+
 
 /* --- Recipes Tab --- */
 .admin-recipes-grid {

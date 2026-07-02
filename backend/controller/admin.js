@@ -67,9 +67,24 @@ const deleteRecipeByAdmin = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) => {
+    const { id } = req.params
+    try {
+        const result = await User.findByIdAndDelete(id)
+        if (!result) {
+            return res.status(404).json({ message: "User not found" })
+        }
+        return res.status(200).json({ message: "User deleted successfully" })
+    } catch (error) {
+        return res.status(500).json({ message: error.message })
+    }
+}
+
 module.exports = {
     adminLogin,
     getUsers,
     toggleBlockUser,
-    deleteRecipeByAdmin
+    deleteRecipeByAdmin,
+    deleteUser
 }
+

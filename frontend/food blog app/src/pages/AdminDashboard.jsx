@@ -15,6 +15,7 @@ export default function AdminDashboard() {
     const [error, setError] = useState('')
     const [actionLoading, setActionLoading] = useState(null) // ID of item being modified
     const [deleteConfirmId, setDeleteConfirmId] = useState(null)
+    const [deleteUserConfirmId, setDeleteUserConfirmId] = useState(null)
 
     const adminToken = localStorage.getItem("adminToken")
     const adminUser = JSON.parse(localStorage.getItem("adminUser") || '{}')
@@ -74,12 +75,24 @@ export default function AdminDashboard() {
         try {
             const headers = { Authorization: `Bearer ${adminToken}` }
             await axios.delete(`${apiUrl}/admin/recipes/${recipeId}`, { headers })
-            
-            // Update local state
             setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe._id !== recipeId))
             setDeleteConfirmId(null)
         } catch (err) {
             alert(err.response?.data?.message || "Failed to delete recipe.")
+        } finally {
+            setActionLoading(null)
+        }
+    }
+
+    const handleDeleteUser = async (userId) => {
+        setActionLoading(userId)
+        try {
+            const headers = { Authorization: `Bearer ${adminToken}` }
+            await axios.delete(`${apiUrl}/admin/users/${userId}`, { headers })
+            setUsers(prevUsers => prevUsers.filter(user => user._id !== userId))
+            setDeleteUserConfirmId(null)
+        } catch (err) {
+            alert(err.response?.data?.message || "Failed to delete user.")
         } finally {
             setActionLoading(null)
         }
@@ -220,19 +233,28 @@ export default function AdminDashboard() {
                                                         </span>
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
-                                                        <button
-                                                            onClick={() => handleToggleBlock(user._id, user.blocked)}
-                                                            disabled={actionLoading === user._id}
-                                                            className={`btn-action ${user.blocked ? 'btn-unblock' : 'btn-block'}`}
-                                                        >
-                                                            {actionLoading === user._id ? (
-                                                                'Updating...'
-                                                            ) : user.blocked ? (
-                                                                <><FaUnlock /> Unblock</>
-                                                            ) : (
-                                                                <><FaLock /> Block</>
-                                                            )}
-                                                        </button>
+                                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                                            <button
+                                                                onClick={() => handleToggleBlock(user._id, user.blocked)}
+                                                                disabled={actionLoading === user._id}
+                                                                className={`btn-action ${user.blocked ? 'btn-unblock' : 'btn-block'}`}
+                                                            >
+                                                                {actionLoading === user._id ? (
+                                                                    'Updating...'
+                                                                ) : user.blocked ? (
+                                                                    <><FaUnlock /> Unblock</>
+                                                                ) : (
+                                                                    <><FaLock /> Block</>
+                                                                )}
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setDeleteUserConfirmId(user._id)}
+                                                                disabled={actionLoading === user._id}
+                                                                className="btn-action btn-delete-user"
+                                                            >
+                                                                <FaTrash /> Delete
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))
@@ -283,26 +305,52 @@ export default function AdminDashboard() {
                 </section>
             </main>
 
-            {/* Delete Confirmation Modal */}
+            {/* Delete Recipe Confirmation Modal */}
             {deleteConfirmId && (
                 <div className="admin-modal-overlay">
                     <div className="admin-modal">
                         <h3>Confirm Deletion</h3>
                         <p>Are you sure you want to remove this recipe? This action is permanent and cannot be undone.</p>
                         <div className="admin-modal-actions">
-                            <button 
-                                className="modal-btn-cancel" 
+                            <button
+                                className="modal-btn-cancel"
                                 onClick={() => setDeleteConfirmId(null)}
                                 disabled={actionLoading}
                             >
                                 Cancel
                             </button>
-                            <button 
-                                className="modal-btn-confirm" 
+                            <button
+                                className="modal-btn-confirm"
                                 onClick={() => handleDeleteRecipe(deleteConfirmId)}
                                 disabled={actionLoading}
                             >
                                 {actionLoading === deleteConfirmId ? "Deleting..." : "Delete Permanently"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete User Confirmation Modal */}
+            {deleteUserConfirmId && (
+                <div className="admin-modal-overlay">
+                    <div className="admin-modal">
+                        <h3>Delete User Account</h3>
+                        <p>Are you sure you want to permanently delete this user? All their data will be removed and this action <strong>cannot be undone</strong>.</p>
+                        <div className="admin-modal-actions">
+                            <button
+                                className="modal-btn-cancel"
+                                onClick={() => setDeleteUserConfirmId(null)}
+                                disabled={actionLoading}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="modal-btn-confirm"
+                                onClick={() => handleDeleteUser(deleteUserConfirmId)}
+                                disabled={actionLoading}
+                            >
+                                {actionLoading === deleteUserConfirmId ? "Deleting..." : "Delete User"}
                             </button>
                         </div>
                     </div>
