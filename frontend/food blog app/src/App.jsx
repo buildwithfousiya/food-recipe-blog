@@ -27,9 +27,20 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+function RootFallback() {
+  return (
+    <div className="container">
+      <div className="btn-spinner" style={{ width: '32px', height: '32px', borderColor: 'rgba(0, 168, 132, 0.2)', borderTopColor: '#00a884', borderWidth: '3px' }}></div>
+    </div>
+  )
+}
+
 const router = createBrowserRouter([
   {
-    path: "/", element: <MainNavigation />, children: [
+    path: "/", 
+    element: <MainNavigation />, 
+    hydrateFallbackElement: <RootFallback />,
+    children: [
       { path: "/", element: <Home />, loader: getAllRecipes },
       { path: "/myRecipe", element: <Home />, loader: getMyRecipe },
       { path: "/favRecipe", element: <Home />, loader: getFavRecipes },
