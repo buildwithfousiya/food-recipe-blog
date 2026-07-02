@@ -328,9 +328,136 @@
   padding: 1.5rem;
 }
 
-.data-card-header { margin-bottom: 1.25rem; }
+.data-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.data-card-header .header-text {
+  flex: 1;
+  min-width: 250px;
+}
 .data-card-header h2 { font-size: 1.15rem; color: #2d3748; margin-bottom: 0.2rem; }
 .data-card-header p  { font-size: 0.85rem; color: #718096; }
+
+/* --- Admin Search Input --- */
+.admin-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.admin-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: #a0aec0;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.admin-search-input {
+  width: 100%;
+  padding: 0.55rem 2.2rem 0.55rem 2.2rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+  color: #2d3748;
+}
+
+.admin-search-input:focus {
+  border-color: #1a6b47;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(26, 107, 71, 0.15);
+}
+
+.admin-search-clear {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.admin-search-clear:hover {
+  color: #4a5568;
+  background-color: #edf2f7;
+}
+
+/* --- Admin Pagination --- */
+.admin-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #edf2f7;
+}
+
+.pagination-info {
+  font-size: 0.82rem;
+  color: #718096;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  color: #4a5568;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #edf2f7;
+  color: #2d3748;
+  border-color: #cbd5e0;
+}
+
+.pagination-btn.active {
+  background-color: #d4f6e8;
+  color: #1a6b47;
+  border-color: #9ae6b4;
+}
+
+.pagination-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  background-color: #f8fafc;
+  border-color: #edf2f7;
+}
+
 
 .table-responsive { width: 100%; overflow-x: auto; }
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import './admin.css'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { FaUsers, FaBookOpen, FaLock, FaUnlock, FaTrash, FaSignOutAlt, FaHome, FaInfoCircle } from 'react-icons/fa'
+import { FaUsers, FaBookOpen, FaLock, FaUnlock, FaTrash, FaSignOutAlt, FaHome, FaInfoCircle, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { API_URL } from '../config'
 
 export default function AdminDashboard() {
@@ -17,9 +17,45 @@ export default function AdminDashboard() {
     const [deleteConfirmId, setDeleteConfirmId] = useState(null)
     const [deleteUserConfirmId, setDeleteUserConfirmId] = useState(null)
 
+    // Search and pagination state
+    const [userSearchQuery, setUserSearchQuery] = useState('')
+    const [debouncedUserSearchQuery, setDebouncedUserSearchQuery] = useState('')
+    const [recipeSearchQuery, setRecipeSearchQuery] = useState('')
+    const [debouncedRecipeSearchQuery, setDebouncedRecipeSearchQuery] = useState('')
+
+    const [userCurrentPage, setUserCurrentPage] = useState(1)
+    const [recipeCurrentPage, setRecipeCurrentPage] = useState(1)
+
+    const USERS_PER_PAGE = 8
+    const RECIPES_PER_PAGE = 8
+
     const adminToken = localStorage.getItem("adminToken")
     const adminUser = JSON.parse(localStorage.getItem("adminUser") || '{}')
     const apiUrl = API_URL
+
+    // Debounce user search input
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedUserSearchQuery(userSearchQuery)
+            setUserCurrentPage(1)
+        }, 300)
+        return () => clearTimeout(handler)
+    }, [userSearchQuery])
+
+    // Debounce recipe search input
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedRecipeSearchQuery(recipeSearchQuery)
+            setRecipeCurrentPage(1)
+        }, 300)
+        return () => clearTimeout(handler)
+    }, [recipeSearchQuery])
+
+    // Reset pagination when active tab changes
+    useEffect(() => {
+        setUserCurrentPage(1)
+        setRecipeCurrentPage(1)
+    }, [activeTab])
 
     useEffect(() => {
         if (!adminToken) {
@@ -109,6 +145,50 @@ export default function AdminDashboard() {
     const blockedUsersCount = users.filter(u => u.blocked).length
     const activeUsersCount = totalUsers - blockedUsersCount
     const totalRecipes = recipes.length
+
+    // Filtering users
+    const filteredUsers = users.filter(user => 
+        user.email?.toLowerCase().includes(debouncedUserSearchQuery.toLowerCase())
+    )
+
+    // Filtering recipes (by title or ingredients)
+    const filteredRecipes = recipes.filter(recipe => {
+        const query = debouncedRecipeSearchQuery.toLowerCase()
+        const titleMatch = recipe.title?.toLowerCase().includes(query)
+        const ingredientsMatch = Array.isArray(recipe.ingredients)
+            ? recipe.ingredients.some(ing => ing.toLowerCase().includes(query))
+            : typeof recipe.ingredients === 'string'
+                ? recipe.ingredients.toLowerCase().includes(query)
+                : false
+        return titleMatch || ingredientsMatch
+    })
+
+    // Slicing/Pagination for Users
+    const totalUserPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE)
+    const paginatedUsers = filteredUsers.slice(
+        (userCurrentPage - 1) * USERS_PER_PAGE,
+        userCurrentPage * USERS_PER_PAGE
+    )
+
+    // Slicing/Pagination for Recipes
+    const totalRecipePages = Math.ceil(filteredRecipes.length / RECIPES_PER_PAGE)
+    const paginatedRecipes = filteredRecipes.slice(
+        (recipeCurrentPage - 1) * RECIPES_PER_PAGE,
+        recipeCurrentPage * RECIPES_PER_PAGE
+    )
+
+    // Handle page out-of-bounds on deletion/filtering
+    useEffect(() => {
+        if (totalUserPages > 0 && userCurrentPage > totalUserPages) {
+            setUserCurrentPage(totalUserPages)
+        }
+    }, [totalUserPages, userCurrentPage])
+
+    useEffect(() => {
+        if (totalRecipePages > 0 && recipeCurrentPage > totalRecipePages) {
+            setRecipeCurrentPage(totalRecipePages)
+        }
+    }, [totalRecipePages, recipeCurrentPage])
 
     if (!adminToken) return null
 
@@ -202,8 +282,25 @@ export default function AdminDashboard() {
                         /* Users Table */
                         <div className="data-card" id="section-users">
                             <div className="data-card-header">
-                                <h2>Registered Users</h2>
-                                <p>Manage user accounts, block or unblock access to the application.</p>
+                                <div className="header-text">
+                                    <h2>Registered Users</h2>
+                                    <p>Manage user accounts, block or unblock access to the application.</p>
+                                </div>
+                                <div className="admin-search-wrapper">
+                                    <FaSearch className="admin-search-icon" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search users by email..."
+                                        value={userSearchQuery}
+                                        onChange={(e) => setUserSearchQuery(e.target.value)}
+                                        className="admin-search-input"
+                                    />
+                                    {userSearchQuery && (
+                                        <button className="admin-search-clear" onClick={() => setUserSearchQuery('')} title="Clear search">
+                                            <FaTimes />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                             <div className="table-responsive">
                                 <table className="admin-table">
@@ -217,14 +314,18 @@ export default function AdminDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {users.length === 0 ? (
+                                        {filteredUsers.length === 0 ? (
                                             <tr>
-                                                <td colSpan="5" className="empty-row">No users registered yet.</td>
+                                                <td colSpan="5" className="empty-row">
+                                                    {debouncedUserSearchQuery 
+                                                        ? `No users found matching "${debouncedUserSearchQuery}".` 
+                                                        : "No users registered yet."}
+                                                </td>
                                             </tr>
                                         ) : (
-                                            users.map((user, index) => (
+                                            paginatedUsers.map((user, index) => (
                                                 <tr key={user._id}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{(userCurrentPage - 1) * USERS_PER_PAGE + index + 1}</td>
                                                     <td className="user-email">{user.email}</td>
                                                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                                     <td>
@@ -262,19 +363,76 @@ export default function AdminDashboard() {
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            {/* Users Pagination */}
+                            {totalUserPages > 1 && (
+                                <div className="admin-pagination">
+                                    <span className="pagination-info">
+                                        Showing {Math.min((userCurrentPage - 1) * USERS_PER_PAGE + 1, filteredUsers.length)} to {Math.min(userCurrentPage * USERS_PER_PAGE, filteredUsers.length)} of {filteredUsers.length} users
+                                    </span>
+                                    <div className="pagination-buttons">
+                                        <button 
+                                            disabled={userCurrentPage === 1}
+                                            onClick={() => setUserCurrentPage(prev => Math.max(prev - 1, 1))}
+                                            className="pagination-btn"
+                                            title="Previous Page"
+                                        >
+                                            <FaChevronLeft />
+                                        </button>
+                                        {Array.from({ length: totalUserPages }, (_, i) => i + 1).map(page => (
+                                            <button
+                                                key={page}
+                                                onClick={() => setUserCurrentPage(page)}
+                                                className={`pagination-btn ${userCurrentPage === page ? 'active' : ''}`}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                        <button 
+                                            disabled={userCurrentPage === totalUserPages}
+                                            onClick={() => setUserCurrentPage(prev => Math.min(prev + 1, totalUserPages))}
+                                            className="pagination-btn"
+                                            title="Next Page"
+                                        >
+                                            <FaChevronRight />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         /* Recipes Grid */
                         <div className="data-card" id="section-recipes">
                             <div className="data-card-header">
-                                <h2>Recipe Catalogue</h2>
-                                <p>Remove recipe items that violate community guidelines or contain inappropriate content.</p>
+                                <div className="header-text">
+                                    <h2>Recipe Catalogue</h2>
+                                    <p>Remove recipe items that violate community guidelines or contain inappropriate content.</p>
+                                </div>
+                                <div className="admin-search-wrapper">
+                                    <FaSearch className="admin-search-icon" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search recipes by title or ingredients..."
+                                        value={recipeSearchQuery}
+                                        onChange={(e) => setRecipeSearchQuery(e.target.value)}
+                                        className="admin-search-input"
+                                    />
+                                    {recipeSearchQuery && (
+                                        <button className="admin-search-clear" onClick={() => setRecipeSearchQuery('')} title="Clear search">
+                                            <FaTimes />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                             <div className="admin-recipes-grid">
-                                {recipes.length === 0 ? (
-                                    <div className="empty-grid-msg">No recipes found in the database.</div>
+                                {filteredRecipes.length === 0 ? (
+                                    <div className="empty-grid-msg">
+                                        {debouncedRecipeSearchQuery 
+                                            ? `No recipes found matching "${debouncedRecipeSearchQuery}".` 
+                                            : "No recipes found in the database."}
+                                    </div>
                                 ) : (
-                                    recipes.map((recipe) => (
+                                    paginatedRecipes.map((recipe) => (
                                         <div key={recipe._id} className="admin-recipe-card">
                                             <div className="recipe-card-img-wrapper">
                                                 <img
@@ -300,6 +458,42 @@ export default function AdminDashboard() {
                                     ))
                                 )}
                             </div>
+
+                            {/* Recipes Pagination */}
+                            {totalRecipePages > 1 && (
+                                <div className="admin-pagination">
+                                    <span className="pagination-info">
+                                        Showing {Math.min((recipeCurrentPage - 1) * RECIPES_PER_PAGE + 1, filteredRecipes.length)} to {Math.min(recipeCurrentPage * RECIPES_PER_PAGE, filteredRecipes.length)} of {filteredRecipes.length} recipes
+                                    </span>
+                                    <div className="pagination-buttons">
+                                        <button 
+                                            disabled={recipeCurrentPage === 1}
+                                            onClick={() => setRecipeCurrentPage(prev => Math.max(prev - 1, 1))}
+                                            className="pagination-btn"
+                                            title="Previous Page"
+                                        >
+                                            <FaChevronLeft />
+                                        </button>
+                                        {Array.from({ length: totalRecipePages }, (_, i) => i + 1).map(page => (
+                                            <button
+                                                key={page}
+                                                onClick={() => setRecipeCurrentPage(page)}
+                                                className={`pagination-btn ${recipeCurrentPage === page ? 'active' : ''}`}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                        <button 
+                                            disabled={recipeCurrentPage === totalRecipePages}
+                                            onClick={() => setRecipeCurrentPage(prev => Math.min(prev + 1, totalRecipePages))}
+                                            className="pagination-btn"
+                                            title="Next Page"
+                                        >
+                                            <FaChevronRight />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </section>
