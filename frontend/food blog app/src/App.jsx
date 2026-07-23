@@ -37,8 +37,7 @@ function RootFallback() {
 
 const router = createBrowserRouter([
   {
-    path: "/", 
-    element: <MainNavigation />, 
+    path: "/", element: <MainNavigation />, 
     hydrateFallbackElement: <RootFallback />,
     children: [
       { path: "/", element: <Home />, loader: getAllRecipes },
